@@ -1,10 +1,11 @@
 # Importing library
 import smtplib, ssl
 
-port =587
+port =465
 smtp_server = "smtp.gmail.com"
-sender_email = "yuqianlucy@gmail.com"
-receiver_email = "yuqianlucy@gmail.com"
+#smtp_server = "localhost"
+sender_email = "lucy.wang@soundofhope.org"
+receiver_email = "lucy.wang@soundofhope.org"
 password = input("Type your password and press enter:")
 message = """\
 Subject: Hi there
