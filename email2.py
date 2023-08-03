@@ -14,7 +14,7 @@ This message is sent from Python for testinf purpose.
 """
 
 # Create a secure SSL context
-context = ssl.create_unverified_context()
+context = ssl._create_unverified_context()
 
 # Taking care of the server
 with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
