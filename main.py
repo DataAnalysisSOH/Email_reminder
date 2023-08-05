@@ -11,13 +11,13 @@ logging.basicConfig(filename='error_log.txt',level=logging.ERROR),
 format = '%(asctime)s - %(levelname)s - %(message)s'
 
 # defining an function to send email
-def send_email(subject, body):
+def send_email(subject,error_message,email_sender,email_password, email_receiver):
     # taking care of the try block
     try:
-         # Email configuration
-        email_sender = 'lucy.wang@soundofhope.org'
-        email_password = 'Wang233579762'
-        email_receiver = 'lucy.wang@soundofhope.org'
+        #  # Email configuration
+        # email_sender = input()
+        # email_password = input()
+        # email_receiver = input()
 
         # taking care of the message variables
         msg = MIMEText(error_message,'plain','utf-8')
@@ -63,6 +63,13 @@ def send_email(subject, body):
 
 # taking care of the entry point of the program
 if __name__ == "__main__":
+    # Let user to input for email credentials and receiver's email
+    email_sender = input("Enter your email:")
+    email_password = input("Enter your email password:")
+    email_receiver = input("Enter receiver's email:")
+
+    subject = "Error Notification"
+    error_message = "Result: 5.0/nError: division by zero"
       # get the path of the python script
     script_path = 'division_error.py'
 
@@ -82,4 +89,4 @@ if __name__ == "__main__":
          # we are logging the error
          logging.error(error_message)
          # then, we are senting the email with the error message
-         send_email("Error Notification", error_message)
+         send_email("Error Notification", error_message,email_sender,email_password,email_receiver)
