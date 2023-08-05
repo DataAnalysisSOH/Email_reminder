@@ -7,9 +7,7 @@ from email.mime.multipart import MIMEMultipart
 from email.header import Header
 
 # doing an email configuration
-email_sender = 'lucy.wang@soundofhope.org'
-email_password = 'Wang233579762'
-email_receiver = 'lucy.wang@soundofhope.org'
+# 
 # We are Opening a plain text file for reading.
 # the text file continas only ASCII characters
 
