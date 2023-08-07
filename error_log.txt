@@ -1,0 +1,10 @@
+ERROR:root:Error in division_error.py: name 'non_existent_variable' is not defined
+ERROR:root:Error in division_error.py: name 'non_existent_variable' is not defined
+ERROR:root:Error in division_error.py: name 'non_existent_variable' is not defined
+ERROR:root:Error in division_error.py: name 'non_existent_variable' is not defined
+ERROR:root:Error in division_error.py: name 'non_existent_variable' is not defined
+ERROR:root:Error in division_error.py: name 'non_existent_variable' is not defined
+ERROR:root:Error in division_error.py: name 'non_existent_variable' is not defined
+ERROR:root:Error in division_error.py: name 'non_existent_variable' is not defined
+ERROR:root:Error in division_error.py: name 'non_existent_variable' is not defined
+ERROR:root:Error in division_error.py: name 'non_existent_variable' is not defined
