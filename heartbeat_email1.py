@@ -36,7 +36,9 @@ if __name__ == "__main__":
     error_message = ""
 
     # Get the path of the Python script
-    script_path = "division_error.py"
+    #script_path = "division_error.py"
+    # checking the car donation report
+    script_path = "Copy_car_donation.py"
 
     # Taking care of the try block
     try:
