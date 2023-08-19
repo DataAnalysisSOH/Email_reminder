@@ -4,10 +4,12 @@ import smtplib
 import logging
 # import the library for delaing google sheet
 import gspread
+
 from oauth2client.service_account import ServiceAccountCredentials
 
 # Defining the Google Sheets credentials file path
-credentials_file_path = 'C:\Users\yuqia\Documents\GitHub\Email-reminder\Email_reminder\credential.json'
+credentials_file_path = 'C:\\Users\\yuqia\\Documents\\GitHub\\Email-reminder\\Email_reminder\\credential.json'
+
 
 # Define the specific cell to check for refresh time
 refresh_cell = 'C1:D1'
@@ -43,6 +45,11 @@ def send_heartbeat_email(subject, message, sender_email, sender_password, receiv
 
 # the entry point of the function
 if __name__ == "__main__":
+    # We are Loading the Credentials from JSON keyfile
+    with open(credentials_file_path, 'r') as credentials_file:
+        credentials_data = json.load(credentials_file)
+
+    credentials = ServiceAccountCredentials.from_json_keyfile_dict(credentials_data, scope)
     # Let the user input emai credentials and receiver's email
     email_sender = input("Enter your email: ")
     email_password = input("Enter your email password: ")
@@ -62,7 +69,9 @@ if __name__ == "__main__":
     #script_path = "division_error.py"
     # checking the car donation report
     script_path = "Copy_car_donation.py"
-
+    
+    # defining the spreadsheet_id 
+    spreadsheet_Id = "1X_Tv7uoJodIrJ7r-7JpnMwew9-HrUxvFizAC4wXjf0w"
     # Taking care of the try block
     try:
         while True:
