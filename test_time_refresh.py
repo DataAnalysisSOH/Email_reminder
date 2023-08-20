@@ -4,8 +4,11 @@ import smtplib
 import logging
 # import the library for delaing google sheet
 import gspread
-
+from google.oauth2.credentials import Credentials
+from google.oauth2.service_account import Credentials as ServiceAccountCredentials
 from oauth2client.service_account import ServiceAccountCredentials
+from googleapiclient.discovery import build
+import json
 
 # Defining the Google Sheets credentials file path
 credentials_file_path = 'C:\\Users\\yuqia\\Documents\\GitHub\\Email-reminder\\Email_reminder\\credential.json'
