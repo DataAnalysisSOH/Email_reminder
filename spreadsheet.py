@@ -61,7 +61,7 @@ if refresh_time_cell:
         # taking care of subject
         subject = "Heartbeat Check"
         # taking care of the message
-        error_message = "This is a heartbeat email to confirm everything is running smoothly."
+        error_message = "This is a heartbeat email to show the report hasn't been refresh normally"
         send_heartbeat_email("Error Notofication",error_message,email_sender,email_password,email_receiver)
 
 
