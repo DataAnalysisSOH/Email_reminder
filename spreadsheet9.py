@@ -1,7 +1,7 @@
 #step 1: getting all the importing function
 from __future__ import print_function
 from dataclasses import field
-from gspread.exeptions import APIError
+from gspread.exceptions import APIError
 #import mysql
 import sched
 from auth import spreadsheet_service
@@ -63,6 +63,52 @@ def get_colName():
 
     return column
 
+import time
+import smtplib
+import logging
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+
+# Define the function to read specific cell value from Google Sheets
+def get_specific_cell_value(worksheet, cell_address):
+    try:
+        cell_value = worksheet.acell(cell_address).value
+        return cell_value
+    except gspread.exceptions.APIError as e:
+        print("Google Sheets API error:", e)
+    except Exception as e:
+        print("An error occurred:", e)
+        return None
+
+# Rest of your code here...
+
+if __name__ == "__main__":
+    # ...
+    # Rest of your code here...
+    # ...
+
+    # Google Sheets credentials
+    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+    creds = ServiceAccountCredentials.from_json_keyfile_name('path/to/your/credential.json', scope)
+    client = gspread.authorize(creds)
+    
+    # Load the Google Sheet
+    spreadsheet = client.open("Your Spreadsheet Name")
+    worksheet = spreadsheet.worksheet("Sheet Name")
+    
+    # Check a specific cell's value
+    cell_value = get_specific_cell_value(worksheet, "A1")  # Adjust the cell address as needed
+    
+    # Check the cell value and take appropriate actions
+    if cell_value == "Some Value":
+        # Do something based on the cell value
+        pass
+    
+    # Continue with the rest of your code...
+
+    # Rest of your code here...
+
+    
 def write_colName():
     spreadsheet_id = spreadsheet_Id
     values = get_colName()
@@ -433,7 +479,7 @@ def main():
     # starting to read in refresh time and checking it
     # making another try block
     try:
-        gc = gspread.service_account(filename='C:\Users\yuqia\Documents\GitHub\Email-reminder\Email_reminder\credential.json')
+        gc = gspread.service_account(filename='C:\\Users\\yuqia\\Documents\\GitHub\\Email-reminder\\Email_reminder\\credential.json')
         sh = gc.open_by_key(spreadsheet_Id)
         # accessing the worksheet
         worksheet = sh.worksheet("Directcost")
@@ -446,7 +492,7 @@ def main():
         current_time = datetime.datetime.now()
         time_until_refresh = (refresh_time-current_time).total_seconds()
         # We are Schedule the task based onthe calculated time
-        schedule.every(time_until_refresh).seconds.do(sqlQuering)
+        #schedule.every(time_until_refresh).seconds.do(sqlQuering)
 
         # starting the while loop
         while True:
@@ -457,7 +503,7 @@ def main():
 
  
 
-    except APIError as e:
+    except gspread.exceptions.APIError as e:
         print("Google Sheets API error:", e)
     except Exception as e:
         print("An error occurred:", e)
@@ -465,11 +511,54 @@ def main():
     try:    
             
         #schedule.every().day.at("11:23").do(sqlQuering)
-        schedule.every(0.1).minutes.do(sqlQuering)
+        #schedule.every(0.1).minutes.do(sqlQuering)
         #schedule.every(60).minutes.do(sqlQuering)
         while True:
         # Checks whether a scheduled task is pending to run or not
             schedule.run_pending()
+            # getting the worksheet using the worksheet name
+            worksheet = sh.worksheet("Direct_cost_withprofit")
+            # defining the cell address
+            cell_address = "E2"
+            # we are using the function to get the specific cell value
+            cell_value = get_specific_cell_value(worksheet, cell_address)
+            # we are creating an ew varibale to do the refresh time cell
+            refresh_time_cell = cell_value
+            # defining an new varibale called refresh time
+            refresh_time = datetime.datetime.strptime(refresh_time_cell, "%Y-%m-%d %H:%M:%S")
+            # defining the while loop
+            while True:
+                current_time = datetime.datetime.now()
+                time_until_refresh = (refresh_time - current_time).total_seconds()
+                # define the if block
+                if current_time.date() > refresh_time.date():
+                    print("Refresh time hasn't changed for one day. Sending error messgae...")
+                # defining another if statement
+
+                if time_until_refresh <= 0:
+                    pass
+                    #sqlQuering()
+                schedule.run_pending()
+                sleep(config.sleep_time)
+        # define the except block
+    except gspread.exceptions.APIError as e:
+            print("Google Sheets API error:",e)
+                
+            # defining the if block
+            # if cell_value is not None:
+            #     print("Cell vae:", cell_value)
+            # # We are Reading the refresh time from cell C1
+            # refresh_time_cell = worksheet.acell("E2").value
+          
+            # we are accessing the cell_address
+            # cell_address = "E2"
+            # # accessing the cell value
+            # cell_value = get_specific_cell_value(worksheet, cell_address)
+            # # defining the if block
+            # if cell_value is not None:
+            #     print("Cell value:", cell_value)
+            
+
             sleep(config.sleep_time)
     except Exception as e:
         if e.errno==errno.EPIPE:
