@@ -9,6 +9,7 @@ from google.oauth2 import service_account
 from auth import spreadsheet_service
 from auth import drive_service
 import datetime
+from heartbeat_email1 import send_heartbeat_email
 
 SCOPES = [
 'https://www.googleapis.com/auth/spreadsheets',
@@ -23,21 +24,66 @@ spreadsheet_id = '1X_Tv7uoJodIrJ7r-7JpnMwew9-HrUxvFizAC4wXjf0w'
 spreadsheet_service = build('sheets', 'v4', credentials=credentials)
 # We are Calling the sheet API
 sheet = spreadsheet_service.spreadsheets()
-# We are Reading the refresh time from cell E2
-refresh_time_cell = sheet.values().get(spreadsheetId=spreadsheet_id, range="Direct_cost_withprofit!E2").execute()
+# We are defining an function to get the specific cell value
+def get_specific_cell_value(worksheet, cell_address):
+    try:
+        result = worksheet.values().get(spreadsheetId=spreadsheet_id, range=cell_address).execute()
+        values = result.get('values', [])
+        return values[0][0] if values else None
+    except Exception as e:
+        print("An error occurred:", e)
+        return None
+    
+# we are reading the refresh datetime from an specific cells
+refresh_time_cell = get_specific_cell_value(sheet, "Direct_cost_withprofit!E2")
 
-# getting the refresh time
-refresh_time = datetime.datetime.strptime(refresh_time_cell, "%Y-%m-%d %H:%M:%S")
-# defining the while loop
-while True:
+# We are Reading the refresh time from cell E2
+#refresh_time_cell = sheet.values().get(spreadsheetId=spreadsheet_id, range="Direct_cost_withprofit!E2").execute()
+#refresh_time_values = refresh_time_cell.get('value',[])
+# turn the refresh time into string
+#refresh_time_str = refresh_time_values[0][0] if refresh_time_values else None
+
+# Defining the if block
+if refresh_time_cell:
+    refresh_time = datetime.datetime.strptime(refresh_time_cell, "%Y-%m-%d %H:%M:%S")
     current_time = datetime.datetime.now()
     time_until_refresh = (refresh_time - current_time).total_seconds()
 
-    # checking whether the refresh date time is within one day
+    # defining the if block
     if current_time.date() > refresh_time.date():
-        print("Refresh time hasn't changed for one day. Sending the error message ")
+        print("Refresh time hasn't change for one day, sending the error Message")
+        # we are senting the heartbeat email
+        # defining the require variable
+        # Let the user input emai credentials and receiver's email
+        email_sender = input("Enter your email: ")
+        email_password = input("Enter your email password: ")
+        email_receiver = input("Enter receiver's email: ")
+        # taking care of subject
+        subject = "Heartbeat Check"
+        # taking care of the message
+        error_message = "This is a heartbeat email to confirm everything is running smoothly."
+        send_heartbeat_email("Error Notofication",error_message,email_sender,email_password,email_receiver)
+
+
+    #defining the else block
     else:
-        print("An error occured:", e)
+        print("The refresh datetime is within one day ")
+else:
+    print("No refresh datetime value is found")
+
+
+# # getting the refresh time
+# refresh_time = datetime.datetime.strptime(refresh_time_cell, "%Y-%m-%d %H:%M:%S")
+# # defining the while loop
+# while True:
+#     current_time = datetime.datetime.now()
+#     time_until_refresh = (refresh_time - current_time).total_seconds()
+
+#     # checking whether the refresh date time is within one day
+#     if current_time.date() > refresh_time.date():
+#         print("Refresh time hasn't changed for one day. Sending the error message ")
+#     else:
+#         print("An error occured:")
 
 # We are using getrequest to get infomration from the spreadsheet
 # # Getting the specific cell values
