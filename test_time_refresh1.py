@@ -76,8 +76,14 @@ if __name__ == "__main__":
 
         # taking care of the Google Sheets credentials
         scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-        creds = ServiceAccountCredentials.from_json_key_file_name('C:\Users\yuqia\Documents\GitHub\Email-reminder\Email_reminder\credential.json')
+        creds = ServiceAccountCredentials.from_json_key_file_name('C:\\Users\\yuqia\\Documents\\GitHub\\Email-reminder\\Email_reminder\\credential.json')
         client = gspread.authorize(creds)
+        # We are Loading the Google Sheet
+        spreadsheet = client.open("Car_Donation_Version11")
+        worksheet = spreadsheet.worksheet("Direct_cost_withprofit")
+        # we are checking the specific cell's value
+        cell_value = get_specific_cell_value(worksheet, "E2")
+        print(cell_value)
 
         # We are Load the Google sheet
         spreadsheet = client.open("Car_Donation_Version11")
