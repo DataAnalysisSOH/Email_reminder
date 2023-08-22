@@ -13,7 +13,10 @@ from datetime import date, timedelta
 import time
 import schedule
 from heartbeat_email1 import send_heartbeat_email
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 SCOPES = [
 'https://www.googleapis.com/auth/spreadsheets',
 'https://www.googleapis.com/auth/drive'
@@ -30,11 +33,11 @@ sheet = spreadsheet_service.spreadsheets()
 # We are defining an function to get the specific cell value
 
 # We are define the require variable
-EMAIL_SENDER = "lucy.wang@soundofhope.org"
-EMAIL_PASSWORD = input("Enter your email password: ")
-EMAIL_RECEIVER_NORMAL = "frank.lee@soundofhope.org"
-EMAIL_RECEIVER_ERROR = "lucy.wang@soundofhope.org"
-SUBJECT = "Heartbeat Check"
+EMAIL_SENDER =  os.getenv("EMAIL_SENDER")
+EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
+EMAIL_RECEIVER_NORMAL = os.getenv("EMAIL_RECEIVER_NORMAL")
+EMAIL_RECEIVER_ERROR = os.getenv("EMAIL_RECEIVER_ERROR")
+SUBJECT = "Daily report checking"
 # defining the error message
 ERROR_MESSAGE = "This is a heartbeat email to show report hasn't been refreshed normally."
 NORMAL_MESSAGE = "Everything is running smoothly"
@@ -63,7 +66,8 @@ def check_refresh_and_send_email():
             send_heartbeat_email(SUBJECT,ERROR_MESSAGE, EMAIL_SENDER,EMAIL_PASSWORD, [EMAIL_RECEIVER_ERROR, EMAIL_RECEIVER_NORMAL])
         #defining the else block
         else:
-            print("The refresh datetime is within one day, sending normal heartbeat")
+            #print("The refresh datetime is within one day, sending normal heartbeat")
+            print("Car Donation Report last updated:",refresh_time)
             send_heartbeat_email(SUBJECT, NORMAL_MESSAGE, EMAIL_SENDER, EMAIL_PASSWORD, [EMAIL_RECEIVER_NORMAL])
     # defining the else block
     else:
