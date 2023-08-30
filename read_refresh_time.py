@@ -15,6 +15,8 @@ import schedule
 from heartbeat_email1 import send_heartbeat_email
 from dotenv import load_dotenv
 import os
+import smtplib
+from email.message import EmailMessage
 
 load_dotenv()
 SCOPES = [
@@ -51,6 +53,22 @@ def get_specific_cell_value(worksheet, cell_address):
         print("An error occurred:", e)
         return None
 
+def send_heartbeat_email(subject, message, sender_email, sender_password, receiver_email,refresh_time=None):
+    try:
+        msg = EmailMessage()
+        msg['Subject'] = subject + (f" - Refresh Time: {refresh_time}" if refresh_time else "")
+        msg['From'] = sender_email
+        msg['To'] = ', '.join(receiver_email)
+        msg.set_content(message)
+
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login(sender_email, sender_password)
+            server.send_message(msg)
+
+        print("Heartbeat email sent successfully")
+    except Exception as e:
+        print("Error sending heartbeat email:", str(e))
+
 # We wish to check the refresh datetime through functions
 def check_refresh_and_send_email():
     refresh_time_cell = get_specific_cell_value(sheet, "Direct_cost_withprofit!E2")
@@ -68,7 +86,7 @@ def check_refresh_and_send_email():
         else:
             #print("The refresh datetime is within one day, sending normal heartbeat")
             print("Car Donation Report last updated:",refresh_time)
-            send_heartbeat_email(SUBJECT, NORMAL_MESSAGE, EMAIL_SENDER, EMAIL_PASSWORD, [EMAIL_RECEIVER_NORMAL])
+            send_heartbeat_email(SUBJECT, NORMAL_MESSAGE, EMAIL_SENDER, EMAIL_PASSWORD, [EMAIL_RECEIVER_NORMAL], refresh_time=refresh_time)
     # defining the else block
     else:
         print("No refresh datetime value is found")
