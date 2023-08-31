@@ -42,7 +42,7 @@ EMAIL_RECEIVER_ERROR = os.getenv("EMAIL_RECEIVER_ERROR")
 SUBJECT = "Daily report checking"
 # defining the error message
 ERROR_MESSAGE = "This is a heartbeat email to show report hasn't been refreshed normally."
-NORMAL_MESSAGE = "Everything is running smoothly"
+NORMAL_MESSAGE = "Car Donation refresh Time"
 
 def get_specific_cell_value(worksheet, cell_address):
     try:
@@ -85,8 +85,9 @@ def check_refresh_and_send_email():
         #defining the else block
         else:
             #print("The refresh datetime is within one day, sending normal heartbeat")
-            print("Car Donation Report last updated:",refresh_time)
-            send_heartbeat_email(SUBJECT, NORMAL_MESSAGE, EMAIL_SENDER, EMAIL_PASSWORD, [EMAIL_RECEIVER_NORMAL], refresh_time=refresh_time)
+            print("Refresh Time:",refresh_time,"Car Donation Report last updated:",refresh_time)
+            normal_message = f"{NORMAL_MESSAGE}\nRefresh time: {refresh_time}"
+            send_heartbeat_email(SUBJECT, normal_message, EMAIL_SENDER, EMAIL_PASSWORD, [EMAIL_RECEIVER_NORMAL], refresh_time=refresh_time)
     # defining the else block
     else:
         print("No refresh datetime value is found")
