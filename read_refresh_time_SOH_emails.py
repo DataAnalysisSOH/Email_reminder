@@ -28,7 +28,7 @@ credentials = None
 credentials = service_account.Credentials.from_service_account_file('./credential.json', scopes=SCOPES)
 
 # The ID spreadsheet.
-spreadsheet_id = '190WGCo1GDuXRbvXnsLdiLEuOVQGb1mpDFIdNLh7KQRU'
+spreadsheet_id = '1KcuyAWpf4z5KilEOUNmr0g9KbHn5PnV1JCSy12cImhY'
 spreadsheet_service = build('sheets', 'v4', credentials=credentials)
 # We are Calling the sheet API
 sheet = spreadsheet_service.spreadsheets()
@@ -42,7 +42,7 @@ EMAIL_RECEIVER_ERROR = os.getenv("EMAIL_RECEIVER_ERROR")
 SUBJECT = "Daily report checking"
 # defining the error message
 ERROR_MESSAGE = "This is a heartbeat email to show report hasn't been refreshed normally."
-NORMAL_MESSAGE = "Executive dashboard refresh Time"
+NORMAL_MESSAGE = "SOH email report refresh Time"
 
 def get_specific_cell_value(worksheet, cell_address):
     try:
@@ -71,11 +71,11 @@ def send_heartbeat_email(subject, message, sender_email, sender_password, receiv
 
 # We wish to check the refresh datetime through functions
 def check_refresh_and_send_email():
-    refresh_time_cell = get_specific_cell_value(sheet, "Direct_cost_withprofit!E2")
+    refresh_time_cell = get_specific_cell_value(sheet, "Revenue Report_AB!B1")
      
     # defining the if block
     if refresh_time_cell:
-        refresh_time = datetime.datetime.strptime(refresh_time_cell, "%Y-%m-%d %H:%M:%S")
+        refresh_time = datetime.datetime.strptime(refresh_time_cell, "%m/%d/%Y")
         # getting the current time
         current_time = datetime.datetime.now()
 
@@ -85,7 +85,7 @@ def check_refresh_and_send_email():
         #defining the else block
         else:
             #print("The refresh datetime is within one day, sending normal heartbeat")
-            print("Refresh Time:",refresh_time,"Executive Dashboard last updated:",refresh_time)
+            print("Refresh Time:",refresh_time,"Car Donation Report last updated:",refresh_time)
             normal_message = f"{NORMAL_MESSAGE}\nRefresh time: {refresh_time}"
             send_heartbeat_email(SUBJECT, normal_message, EMAIL_SENDER, EMAIL_PASSWORD, [EMAIL_RECEIVER_NORMAL], refresh_time=refresh_time)
     # defining the else block
